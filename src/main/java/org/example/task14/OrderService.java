@@ -6,14 +6,20 @@ import java.util.List;
  * Сервис расчета стоимости заказов.
  *
  * @author Горнак Олег
- * @version 1.0
+ * @version 2.0
  */
 public class OrderService {
+
+    private final DiscountService discountService;
+
+    public OrderService(DiscountService discountService) {
+        this.discountService = discountService;
+    }
 
     /**
      * Вычисляет стоимость заказа с учетом типа клиента.
      * <p/>
-     * Метод суммирует стоимость всех позиций, затем применяет скидку:
+     * Метод суммирует стоимость всех позиций, затем применяет скидку.
      * <ul>
      *     <li>Скидку 10% для клиентов со статусом "VIP".</li>
      *     <li>Скидку 5% для клиентов со статусом "NEW".</li>
@@ -21,27 +27,29 @@ public class OrderService {
      * </ul>
      *
      * @param items список позиций в заказе
-     * @param type  тип клиента для определения персональной скидки ("VIP", "NEW" и др.)
+     * @param type  тип клиента ("VIP", "NEW" и "COMMON")
      * @return итоговая стоимость заказа
      */
-    public double calc(List<Item> items, String type) {
+    public double calc(List<Item> items, ClientType type) {
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("Список товаров не может быть пустым");
+        }
+
+        var summa = getSum(items);
+        return discountService.apply(summa, type);
+    }
+
+    /**
+     * Метод суммирует стоимость всех позиций
+     *
+     * @param items список позиций в заказе
+     * @return стоимость заказа
+     */
+    private double getSum(List<Item> items) {
         double s = 0;
         for (Item i : items) {
             s += i.getPrice() * i.getQuantity();
         }
-
-        if (type.equals("VIP")) {
-            s = s * 0.9;
-        }
-
-        if (type.equals("NEW")) {
-            s = s * 0.95;
-        }
-
-        if (s > 1000) {
-            s = s - 50;
-        }
-
         return s;
     }
 }
