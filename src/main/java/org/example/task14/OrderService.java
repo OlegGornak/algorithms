@@ -1,12 +1,13 @@
 package org.example.task14;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Сервис расчета стоимости заказов.
  *
  * @author Горнак Олег
- * @version 2.0
+ * @version 3.0
  */
 public class OrderService {
 
@@ -40,16 +41,15 @@ public class OrderService {
     }
 
     /**
-     * Метод суммирует стоимость всех позиций
+     * Метод суммирует стоимость всех позиций с применением скидки по количеству товаров в позиции
      *
      * @param items список позиций в заказе
-     * @return стоимость заказа
+     * @return стоимость заказа с учетом скидки по позиции
      */
     private double getSum(List<Item> items) {
-        double s = 0;
-        for (Item i : items) {
-            s += i.getPrice() * i.getQuantity();
-        }
-        return s;
+        return items.stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(i -> discountService.applyItemDiscount(i.getPrice() * i.getQuantity(), i.getQuantity()))
+                .sum();
     }
 }

@@ -4,10 +4,12 @@ package org.example.task14;
  * Сервис для применения скидки.
  *
  * @author Горнак Олег
- * @version 1.0
+ * @version 2.0
  */
 public class DiscountService {
 
+    private static final double ITEM_QUANTITY_DISCOUNT = 10;
+    private static final double ITEM_DISCOUNT = 0.99;
     private static final double VIP_DISCOUNT = 0.90;
     private static final double NEW_CLIENT_DISCOUNT = 0.95;
     private static final double LARGE_ORDER = 1000.0;
@@ -41,5 +43,22 @@ public class DiscountService {
         }
 
         return summa;
+    }
+
+    /**
+     * Применение скидки для позиции
+     * <p/>
+     * Если количество поваров больше 10, то применяется скидка 1%
+     *
+     * @param summa стоимость заказае без учета скидки
+     * @param quantity количество товаров
+     * @return итоговая стоимость заказа
+     */
+    public double applyItemDiscount(double summa, int quantity) {
+        if (quantity > ITEM_QUANTITY_DISCOUNT) {
+            return summa * ITEM_DISCOUNT;
+        } else {
+            return summa;
+        }
     }
 }
