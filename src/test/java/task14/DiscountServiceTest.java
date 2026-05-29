@@ -11,35 +11,36 @@ public class DiscountServiceTest {
 
     @Test
     void apply_common() {
-        var result = service.apply(300, 2, ClientType.COMMON);
+        var result = service.apply(300, ClientType.COMMON);
 
         Assertions.assertEquals(300d, result);
     }
 
     @Test
     void apply_vip() {
-        var result = service.apply(300, 1, ClientType.VIP);
+        var result = service.apply(300, ClientType.VIP);
 
         Assertions.assertEquals(270d, result);
     }
 
     @Test
     void apply_new() {
-        var result = service.apply(300, 5, ClientType.NEW);
+        var result = service.apply(300, ClientType.NEW);
 
         Assertions.assertEquals(285d, result);
     }
 
     @Test
     void apply_large() {
-        var result = service.apply(1200, 4, ClientType.COMMON);
+        var result = service.apply(1200, ClientType.COMMON);
 
         Assertions.assertEquals(1150d, result);
     }
 
+
     @Test
-    void apply_amount_more_then_ten() {
-        var result = service.apply(100, 15, ClientType.COMMON);
+    void applyItemDiscount_more_then_ten() {
+        var result = service.applyItemDiscount(100d, 15);
 
         Assertions.assertEquals(99d, result);
     }
